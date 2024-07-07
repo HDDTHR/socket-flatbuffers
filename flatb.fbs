@@ -1,4 +1,4 @@
-namespace packet;
+namespace flatb;
 
 table DMessage {
     text: string;

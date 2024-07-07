@@ -2,7 +2,7 @@ import socket
 import logging
 import struct
 
-from utils.packet.MessagePacket import MessagePacket
+from utils.packet.message_packet import MessagePacket
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,6 +22,9 @@ def main():
     print(struct.unpack("bbb", version_data))
 
     packets = [MessagePacket("Hello, world!")]
+
+    for packet in packets:
+        packet.send(sock)
 
     sock.close()
 

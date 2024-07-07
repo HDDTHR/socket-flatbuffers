@@ -1,34 +1,53 @@
 import socket
-import queue
 import struct
-import threading
 import struct
+import logging
 
-MAJOR = 0
-MINOR = 0
-PATCH = 1
+from utils.constants import MAJOR, MINOR, PATCH
+from utils.exception.packet_handler_not_known_exception import PacketHandlerNotKnownException
+from utils.packet_handler_registrar import PacketHandlerRegistrar
 
-#q = queue.Queue()
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 
-def worker():
+def main():
+    PacketHandlerRegistrar.init()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('localhost', 1104))
     sock.listen(5)
     while True:
-        print("Waiting for a new socket!")
+        print("Waiting for a new connection!")
         conn, _ = sock.accept()
 
-        # Initialization Phase
-        conn.send(struct.pack("bbb", MAJOR, MINOR, PATCH))
+        try:
+            # Initialization Phase
+            conn.send(struct.pack("bbb", MAJOR, MINOR, PATCH))
 
-        # Communication Phase
-        cmd = conn.recv(1)
-        while cmd:
-            print(f"{cmd.decode()} Command Executed!")
-            cmd = conn.recv(1)
+            # Communication Phase
+            while True:
+                data = conn.recv(4)
+                if not data:
+                    break
 
-        print("Socket closed!")
-    
-#thread = threading.Thread(target=worker, daemon=True).start()
+                id = struct.unpack("I", data)[0]
+                try:
+                    packet_handler = PacketHandlerRegistrar.handle_packet(id)
+                    packet_data = packet_handler.handle_socket(conn)
+                    print(packet_data)
+                except PacketHandlerNotKnownException as e:
+                    logging.warning(f"Identifier {id} not found in the PacketRegistrar, disconnecting client..")
+                    break  # Exit the loop to wait for a new connection
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+        finally:
+            conn.close()
+            logging.info("Socket reset!")
 
-worker()
+if __name__ == "__main__":  
+    main()

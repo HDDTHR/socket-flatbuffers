@@ -13,9 +13,10 @@ class BasePacket(ABC):
         pass
     
     def handle_socket(self, sock: socket.socket) -> None:
+        sock.sendall(struct.pack("I", len(self._raw_data)))
         sock.sendall(self._raw_data)
 
     @final
     def send(self, sock: socket.socket) -> None:
-        sock.sendall(struct.pack("I", len(self._raw_data)))
+        sock.sendall(struct.pack("I", self.identifier))
         self.handle_socket(sock)

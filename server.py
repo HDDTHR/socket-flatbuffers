@@ -38,8 +38,8 @@ def main():
                 id = struct.unpack("I", data)[0]
                 try:
                     packet_handler = PacketHandlerRegistrar.handle_packet(id)
-                    packet_data = packet_handler.handle_socket(conn)
-                    print(packet_data)
+                    packet_handler.handle_socket(conn)
+                    packet_handler.execute()
                 except PacketHandlerNotKnownException as e:
                     logging.warning(f"Identifier {id} not found in the PacketRegistrar, disconnecting client..")
                     break  # Exit the loop to wait for a new connection

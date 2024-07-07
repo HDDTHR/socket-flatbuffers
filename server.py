@@ -22,7 +22,7 @@ def main():
     sock.bind(('localhost', 1104))
     sock.listen(5)
     while True:
-        print("Waiting for a new connection!")
+        logging.info("Waiting for a new connection!")
         conn, _ = sock.accept()
 
         try:

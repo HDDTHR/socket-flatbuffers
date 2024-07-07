@@ -20,7 +20,7 @@ def main():
 
     # Receive version
     version_data = sock.recv(3)
-    print(struct.unpack("bbb", version_data))
+    logging.info(struct.unpack("bbb", version_data))
 
     packets = [
         MessagePacket("Good morning"),

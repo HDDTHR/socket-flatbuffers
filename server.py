@@ -2,7 +2,7 @@ import socket
 import queue
 import struct
 import threading
-from time import sleep
+import struct
 
 MAJOR = 0
 MINOR = 0
@@ -26,6 +26,7 @@ def worker():
         while cmd:
             print(f"{cmd.decode()} Command Executed!")
             cmd = conn.recv(1)
+
         print("Socket closed!")
     
 #thread = threading.Thread(target=worker, daemon=True).start()

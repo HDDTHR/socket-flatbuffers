@@ -1,0 +1,5 @@
+namespace packet;
+
+table DMessage {
+    text: string;
+}

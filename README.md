@@ -1,4 +1,4 @@
-# socket-flatbuffers
+# Socket Flatbuffers
 
 Experimenting with sockets and serialization.
 

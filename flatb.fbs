@@ -3,3 +3,8 @@ namespace flatb;
 table DMessage {
     text: string;
 }
+
+table DRSA {
+    p: long;
+    q: long;
+}

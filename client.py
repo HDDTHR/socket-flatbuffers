@@ -3,6 +3,7 @@ import logging
 import struct
 
 from utils.packet.message_packet import MessagePacket
+from utils.packet.rsa_packet import RSAPacket
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,7 +22,14 @@ def main():
     version_data = sock.recv(3)
     print(struct.unpack("bbb", version_data))
 
-    packets = [MessagePacket("Hello, world!")]
+    packets = [
+        MessagePacket("Good morning"),
+        MessagePacket("Starshine,"),
+        MessagePacket("the earth says"),
+        MessagePacket("Hello!"),
+        RSAPacket(7003995859407499,
+                  7754608596439589)
+    ]
 
     for packet in packets:
         packet.send(sock)
